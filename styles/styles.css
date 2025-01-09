@@ -1,0 +1,35 @@
+.active {
+  background-color: pink;
+  color: black;
+}
+
+.activeMobile {
+  color: pink !important;
+}
+
+/* Simple loading screen styles */
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+/* Custom background for selected row */
+table.dataTable tr.selected, table.dataTable tbody tr.bg-selected {
+  background-color: rgba(14, 85, 238, 0.5); /* Adjust the color as needed */
+}
+
+table.dataTable tbody{
+  background-color: rgba(238, 241, 248, 0.5);
+}
+
+
+
