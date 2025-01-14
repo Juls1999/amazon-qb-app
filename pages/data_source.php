@@ -18,7 +18,9 @@ if (!isset($_SESSION['user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI - KB - Data Source</title>
 
+    <link rel="stylesheet" href="../styles/style.css">
     <link rel="stylesheet" href="../styles/styles.css">
+    
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.0/css/dataTables.tailwindcss.css">
 
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-default@4/default.css" rel="stylesheet">
@@ -40,7 +42,7 @@ if (!isset($_SESSION['user'])) {
     <div class="col-span-12 lg:col-span-10 bg-gray-400">
         <div class="bg-white mx-4 rounded-md my-3">
             <div class="ml-4 flex gap-2">
-                <button class="bg-green-500 hover:bg-green-600 py-1 px-4 rounded-full text-white mt-3 mb-1"><i
+                <button class="bg-yellow-500 hover:bg-green-600 py-1 px-4 rounded-full text-white mt-3 mb-1"><i
                         class="fa-solid fa-plus"></i> Add Data Source</button>
                 <button id="editBtn"
                     class="bg-yellow-500 hover:bg-yellow-600 py-1 px-4 rounded-full text-white disabled:opacity-50 mt-3 mb-1 cursor-not-allowed"
@@ -196,14 +198,12 @@ if (!isset($_SESSION['user'])) {
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <!-- Tailwind css -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script>
 
     <!-- DataTables -->
     <script src="https://cdn.datatables.net/2.2.0/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.2.0/js/dataTables.tailwindcss.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Custom Toggle Script -->
     <script src="../scripts/toggle.js"></script>

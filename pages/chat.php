@@ -18,6 +18,7 @@ if (!isset($_SESSION['user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI - KB</title>
 
+    <link rel="stylesheet" href="../styles/style.css">
     <link rel="stylesheet" href="../styles/styles.css">
 
 
@@ -48,7 +49,7 @@ if (!isset($_SESSION['user'])) {
                 <!-- Chat messages will appear here -->
 
             </div>
-            
+
             <button id="destroySessionButton" class="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded-md">End
                 Chat</button>
             <div class="flex items-center border-t border-gray-300 bg-gray-50 p-2">
@@ -68,7 +69,6 @@ if (!isset($_SESSION['user'])) {
 
 
     <!-- Tailwind css -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <!--Jquery-->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

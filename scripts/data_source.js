@@ -1,6 +1,6 @@
 $(document).ready(function () {
   // Initialize DataTable
-  $('#dataTable').DataTable();
+  $("#dataTable").DataTable();
 
   let selectedRow = null;
 
@@ -14,6 +14,12 @@ $(document).ready(function () {
     // Enable the Edit button
     $("#editBtn").prop("disabled", false);
     $("#editBtn").removeClass("cursor-not-allowed");
+  });
+
+  // Add button click handler
+  $("#addBtn").on("click", function () {
+    //code..
+    console.log("addBtn clicked!");
   });
 
   // Edit button click handler

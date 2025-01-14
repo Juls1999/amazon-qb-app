@@ -20,6 +20,7 @@ if (!isset($_SESSION['user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI - KB</title>
 
+    <link rel="stylesheet" href="../styles/style.css">
     <link rel="stylesheet" href="../styles/styles.css">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.tailwindcss.css">
@@ -48,7 +49,7 @@ if (!isset($_SESSION['user'])) {
             <div class="max-h-screen overflow-y-auto lg:overflow-x-hidden">
                 <table id="feedbackTable" class="min-w-full divide-y divide-gray-200 table-fixed">
                     <thead class="bg-gray-500">
-                        <tr>
+                        <tr class="bg-gray-200">
                             <th class="hidden px-4 py-2 text-left text-sm font-medium w-1/5">ID</th>
                             <th class="px-4 py-2 text-left text-sm font-medium w-1/5">Prompt</th>
                             <th class="px-4 py-2 text-left text-sm font-medium w-1/5">Response</th>
@@ -121,7 +122,6 @@ if (!isset($_SESSION['user'])) {
     </div>
 
     <!-- Tailwind css -->
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
