@@ -20,8 +20,8 @@ if (!isset($_SESSION['user'])) {
 
     <link rel="stylesheet" href="../styles/style.css">
     <link rel="stylesheet" href="../styles/styles.css">
-    
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.0/css/dataTables.tailwindcss.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.1/css/dataTables.tailwindcss.css">
 
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-default@4/default.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet">
@@ -42,13 +42,15 @@ if (!isset($_SESSION['user'])) {
     <div class="col-span-12 lg:col-span-10 bg-gray-400">
         <div class="bg-white mx-4 rounded-md my-3">
             <div class="ml-4 flex gap-2">
-                <button class="bg-yellow-500 hover:bg-green-600 py-1 px-4 rounded-full text-white mt-3 mb-1"><i
+                <button id="addBtn"
+                    class="bg-green-500 hover:bg-green-600 py-1 px-4 rounded-full text-white mt-3 mb-1"><i
                         class="fa-solid fa-plus"></i> Add Data Source</button>
                 <button id="editBtn"
                     class="bg-yellow-500 hover:bg-yellow-600 py-1 px-4 rounded-full text-white disabled:opacity-50 mt-3 mb-1 cursor-not-allowed"
                     disabled><i class="fa-solid fa-pencil"></i> Edit Data Source</button>
-                <button class="bg-red-500 hover:bg-red-600 py-1 px-4 rounded-full text-white mt-3 mb-1"><i
-                        class="fa-solid fa-trash"></i> Delete Data Source</button>
+                <button id="deleteBtn"
+                    class="bg-red-500 hover:bg-red-600 py-1 px-4 rounded-full text-white disabled:opacity-50 mt-3 mb-1 cursor-not-allowed"
+                    disabled><i class="fa-solid fa-trash"></i> Delete Data Source</button>
             </div>
             <div class="mx-6 max-h-[560px] min-h-[560px] overflow-y-auto md:overflow-x-hidden">
                 <table id="dataTable" class="display hover:cursor-pointer">
@@ -61,103 +63,75 @@ if (!isset($_SESSION['user'])) {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr class="hover:bg-gray-300">
                             <td class="border border-gray-300 px-4 py-2">1</td>
                             <td class="border border-gray-300 px-4 py-2">Crystal Dash Support</td>
-                            <td class="border border-gray-300 px-4 py-2">CREATING</td>
+                            <td class="border border-gray-300 px-4 py-2"><span
+                                    class="bg-blue-400 px-4 py-1 rounded-full text-white">CREATING</span></td>
                             <td class="border border-gray-300 px-4 py-2">2024-12-24</td>
                         </tr>
-                        <tr>
+                        <tr class="hover:bg-gray-300">
                             <td class="border border-gray-300 px-4 py-2">2</td>
                             <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
+                            <td class="border border-gray-300 px-4 py-2"><span
+                                    class="bg-green-400 px-4 py-1 rounded-full text-white">ACTIVE</span></td>
                             <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
                         </tr>
-                        <tr>
+                        <tr class="hover:bg-gray-300">
                             <td class="border border-gray-300 px-4 py-2">3</td>
                             <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
+                            <td class="border border-gray-300 px-4 py-2"><span
+                                    class="bg-green-400 px-4 py-1 rounded-full text-white">ACTIVE</span></td>
                             <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
                         </tr>
-                        <tr>
+                        <tr class="hover:bg-gray-300">
                             <td class="border border-gray-300 px-4 py-2">4</td>
                             <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
+                            <td class="border border-gray-300 px-4 py-2"><span
+                                    class="bg-green-400 px-4 py-1 rounded-full text-white">ACTIVE</span></td>
                             <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
                         </tr>
-                        <tr>
+                        <tr class="hover:bg-gray-300">
                             <td class="border border-gray-300 px-4 py-2">5</td>
                             <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                            <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2">2</td>
-                            <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                            <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2">2</td>
-                            <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                            <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2">2</td>
-                            <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                            <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2">2</td>
-                            <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                            <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2">2</td>
-                            <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                            <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2">2</td>
-                            <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                            <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2">2</td>
-                            <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                            <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2">2</td>
-                            <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                            <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2">2</td>
-                            <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                            <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2">2</td>
-                            <td class="border border-gray-300 px-4 py-2">Fanvil Support</td>
-                            <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
+                            <td class="border border-gray-300 px-4 py-2"><span
+                                    class="bg-green-400 px-4 py-1 rounded-full text-white">ACTIVE</span></td>
                             <td class="border border-gray-300 px-4 py-2">2024-12-23</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <!-- Add Modal -->
+        <div id="addModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 items-center justify-center">
+            <div class="bg-white rounded w-1/3">
+                <div class="bg-green-500 py-4 text-center text-white">
+                    <h2 class="text-lg font-medium"><i class="fa-solid fa-plus"></i> Add Data Source</h2>
+                </div>
 
-        <!-- Modal -->
-        <div id="editModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+                <div class="px-6">
+                    <div class="mb-4 mt-4">
+                        <label for="addId" class="block text-sm font-medium">ID</label>
+                        <input id="addId" class="border border-gray-300 px-4 py-2 w-full" type="text" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="addName" class="block text-sm font-medium">Name</label>
+                        <input id="addName" class="border border-gray-300 px-4 py-2 w-full" type="text" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="addStatus" class="block text-sm font-medium">Status</label>
+                        <input id="addStatus" class="border border-gray-300 px-4 py-2 w-full" type="text" />
+                    </div>
+                </div>
+                <div class="flex justify-center bg-green-500 py-4">
+                    <button id="closeAddModal" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                    <button id="saveAddChanges" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+                </div>
+            </div>
+        </div> <!-- End of Add Modal-->
+
+        <!-- Edit Modal -->
+        <div id="editModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 items-center justify-center">
             <div class="bg-white rounded w-1/3">
                 <div class="bg-yellow-500 py-4 text-center text-white">
                     <h2 class="text-lg font-medium"><i class="fa-solid fa-pencil"></i> Edit Data Source</h2>
@@ -189,9 +163,24 @@ if (!isset($_SESSION['user'])) {
                     <button id="saveChanges" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
                 </div>
             </div>
-        </div>
+        </div> <!-- End of Edit Modal -->
 
-
+        <!-- Delete Modal -->
+        <div id="deleteModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 items-center justify-center">
+            <div class="bg-white rounded w-1/3">
+                <div class="bg-red-500 py-4 text-center text-white">
+                    <h2 class="text-lg font-medium"><i class="fa-solid fa-trash"></i> Confirm Deletion</h2>
+                </div>
+                <div class="px-6 py-4">
+                    <p class="text-sm font-medium text-gray-700">Are you sure you want to delete this data source? This
+                        action cannot be undone.</p>
+                </div>
+                <div class="flex justify-center bg-red-500 py-4">
+                    <button id="closeDeleteModal" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                    <button id="confirmDelete" class="bg-red-700 text-white px-4 py-2 rounded">Delete</button>
+                </div>
+            </div>
+        </div> <!-- End of Delete Modal-->
     </div>
     </div>
 
@@ -202,8 +191,8 @@ if (!isset($_SESSION['user'])) {
     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script>
 
     <!-- DataTables -->
-    <script src="https://cdn.datatables.net/2.2.0/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.2.0/js/dataTables.tailwindcss.js"></script>
+    <script src="https://cdn.datatables.net/2.2.1/js/dataTables.js"></script>
+    <script src="../scripts/data_table.js"></script>
 
     <!-- Custom Toggle Script -->
     <script src="../scripts/toggle.js"></script>

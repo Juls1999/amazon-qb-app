@@ -41,7 +41,7 @@ $navItems = [
                 <p class="text-pink-500 text-2xl">
                     Hello, <a href="../pages/profile.php" class="font-bold"><?= $_SESSION['user'] ?></a>
                 </p>
-                <a href="../session/logout.php" class="text-white">(Log out)</a>
+                <a href="../session/logout.php" class="text-white bg-red-600 px-3 pb-1 rounded-full hover:bg-red-700">Log out</a>
             </div>
         </nav>
     </div>

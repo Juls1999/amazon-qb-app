@@ -21,3 +21,8 @@
     justify-content: center;
     font-size: 1.5rem;
   }
+
+  table.dataTable tr.selected {
+    background-color: #9ca3af; /* This is equivalent to bg-gray-400 in Tailwind */
+  }
+  
