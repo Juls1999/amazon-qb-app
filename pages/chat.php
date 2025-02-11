@@ -17,9 +17,15 @@ if (!isset($_SESSION['user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI - KB</title>
-
+    <!-- Tailwindcss -->
     <link rel="stylesheet" href="../styles/style.css">
-    <link rel="stylesheet" href="../styles/styles.css">
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Faustina:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
 
 
     <!-- Main CSS Libraries -->
@@ -32,10 +38,7 @@ if (!isset($_SESSION['user'])) {
 
 <body>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <p>Loading...</p>
-    </div>
+
 
     <!-- nav -->
     <?php include '../includes/nav.php'; ?>
@@ -65,7 +68,7 @@ if (!isset($_SESSION['user'])) {
             chatbot to refresh the session.</p>
     </div>
     <!-- End of Main Content -->
-    </div>
+    </div><!-- End of Desktop View-->
 
 
     <!-- Tailwind css -->
@@ -77,8 +80,6 @@ if (!isset($_SESSION['user'])) {
     <!-- custom script -->
     <script src="../scripts/chat.js"></script>
 
-    <!-- Custom Toggle Script -->
-    <script src="../scripts/toggle.js"></script>
 
     <!-- Custom Navigation Script -->
     <script src="../scripts/navigation.js"> </script>

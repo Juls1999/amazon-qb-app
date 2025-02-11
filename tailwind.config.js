@@ -7,7 +7,12 @@ module.exports = {
     "./index.php",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        faustina: ["Faustina", "sans-serif"],
+        anton: ["Anton", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 };

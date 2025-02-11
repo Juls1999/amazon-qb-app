@@ -19,9 +19,18 @@ if (!isset($_SESSION['user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI - KB</title>
-
+    <!-- Tailwindcss -->
     <link rel="stylesheet" href="../styles/style.css">
-    <link rel="stylesheet" href="../styles/styles.css">
+    <!-- Custom css -->
+    <link rel="stylesheet" href="../styles/loading_screen.css">
+    <link rel="stylesheet" href="../styles/data_table.css">
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Faustina:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.tailwindcss.css">
 
@@ -36,10 +45,7 @@ if (!isset($_SESSION['user'])) {
 <body>
 
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <p>Loading...</p>
-    </div>
+
     <!-- nav -->
     <?php include '../includes/nav.php'; ?>
 
@@ -119,7 +125,7 @@ if (!isset($_SESSION['user'])) {
         </div>
 
     </div>
-    </div>
+    </div><!-- End of Desktop View-->
 
     <!-- Tailwind css -->
 

@@ -12,39 +12,6 @@ $dotenv->load();
 
 try {
 
-    // this function is for learning purposes, this should be static [will be deleted after the creation of QB App]
-    function generateApplicationId()
-    {
-        // The first character should be alphanumeric (a-z, A-Z, 0-9)
-        $firstChar = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 1);
-
-        // The remaining 35 characters can be alphanumeric or hyphen
-        $remainingChars = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'), 0, 35);
-
-        // Concatenate the first character with the remaining 35 characters
-        $applicationId = $firstChar . $remainingChars;
-
-        return $applicationId;
-    }
-
-
-    // this function is for learning purposes, this should be static [will be deleted after the creation of QB App]
-    function generateIndexId()
-    {
-        // The first character should be alphanumeric (a-z, A-Z, 0-9)
-        $firstChar = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 1);
-
-        // The remaining 35 characters can be alphanumeric or hyphen
-        $remainingChars = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'), 0, 35);
-
-        // Concatenate the first character with the remaining 35 characters
-        $IndexId = $firstChar . $remainingChars;
-
-        return $IndexId;
-    }
-
-
-
     // Create a new Bedrock Agent client
     $client = new QBusinessClient([
         'version' => 'latest',
@@ -56,7 +23,7 @@ try {
     ]);
 
     $result = $client->createDataSource([
-        'applicationId' => generateApplicationId(), // REQUIRED [the agent's ID]
+        'applicationId' => 'd0021987-01c5-4ff2-9be4-ff9c1e482603', // REQUIRED [the agent's ID]
         'configuration' => [
             'type' => 'WEBCRAWLERV2', // Changed to WEBCRAWLERV2
             'syncMode' => 'FULL_CRAWL',
@@ -65,7 +32,7 @@ try {
                 'repositoryEndpointMetadata' => [
                     'seedUrlConnections' => [
                         [
-                            'seedUrl' => 'https://example.com' //the domain of the website that will serve as the data source
+                            'seedUrl' => 'https://www.crystaldash.com/' //the domain of the website that will serve as the data source
                         ]
                     ],
                     'authentication' => 'NoAuthentication', // Specify BASIC_AUTH
@@ -90,7 +57,7 @@ try {
         ],
         'description' => 'Data Source for my Q business application',
         'displayName' => 'MyDataSource', // REQUIRED
-        'indexId' => generateIndexId(), // REQUIRED
+        'indexId' => 'b9d8bc3a-9f49-41e1-a418-1513248628d0', // REQUIRED
         'syncSchedule' => '',
     ]);
 

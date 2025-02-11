@@ -1,8 +1,15 @@
 <?php
-    session_start();
+session_start();
 
-    //destroying all sessions and redirect user to login page
-    session_destroy();
-    header("location:/amazon-q");
+// Destroy all session data
+session_unset();
+session_destroy();
 
+// Destroy the session cookie if it exists
+if (isset($_COOKIE[session_name()])) {
+    setcookie(session_name(), '', time() - 3600, '/');
+}
+
+header("Location: /amazon-q/index.php");
+exit();
 ?>

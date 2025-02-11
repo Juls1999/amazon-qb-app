@@ -17,9 +17,17 @@ if (!isset($_SESSION['user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI - KB</title>
-
+    <!-- Tailwindcss -->
     <link rel="stylesheet" href="../styles/style.css">
-    <link rel="stylesheet" href="../styles/styles.css">
+    <!-- Custom css -->
+    <link rel="stylesheet" href="../styles/loading_screen.css">
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Faustina:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-default@4/default.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet">
@@ -32,10 +40,7 @@ if (!isset($_SESSION['user'])) {
     <!-- nav -->
     <?php include "../includes/nav.php"; ?>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <p>Loading...</p>
-    </div>
+    
 
     <div class="col-span-12 lg:col-span-10">
         <p class="mt-5 ml-12 font-semibold text-2xl">Edit Profile</p>
@@ -54,7 +59,7 @@ if (!isset($_SESSION['user'])) {
         <button class="mt-6 ml-24 border rounded-md bg-green-500 p-2 hover:bg-green-600 text-white" id="saveBtn">Save
             Changes</button>
     </div>
-    </div>
+    </div><!-- End of Desktop View-->
     <!-- Tailwind css -->
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"

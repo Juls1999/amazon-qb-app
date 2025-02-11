@@ -4,14 +4,15 @@ $(document).ready(function () {
     var currentPage = window.location.pathname; // Get the current path
     $("nav ul li a").each(function () {
       if ($(this).attr("href") === currentPage) {
-        $(this).parent().addClass("active"); 
+        $(this).parent().addClass("bg-pink-300"); 
+        $(this).parent().addClass("text-black");
       }
     });
   } else {
     var currentPage = window.location.pathname; // Get the current path
     $("nav ul li a").each(function () {
       if ($(this).attr("href") === currentPage) {
-        $(this).parent().addClass("activeMobile"); 
+        $(this).parent().addClass("text-pink-300"); 
       }
     });
   }

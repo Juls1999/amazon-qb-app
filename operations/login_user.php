@@ -10,8 +10,6 @@ $password = isset($_POST['password']) ? $_POST['password'] : '';
 $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?;");
 $stmt->bind_param("s", $username);
 
-// Execute the statement
-header('Content-Type: application/json'); // Set header for JSON response
 
 if ($stmt->execute()) {
     $result = $stmt->get_result();

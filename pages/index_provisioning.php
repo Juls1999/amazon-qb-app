@@ -17,9 +17,19 @@ if (!isset($_SESSION['user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI - KB</title>
-
+    <!-- Tailwind css -->
     <link rel="stylesheet" href="../styles/style.css">
-    <link rel="stylesheet" href="../styles/styles.css">
+    <!-- Custom css -->
+    <link rel="stylesheet" href="../styles/data_table.css">
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Faustina:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.1/css/dataTables.tailwindcss.css">
 
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-default@4/default.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet">
@@ -32,93 +42,94 @@ if (!isset($_SESSION['user'])) {
     <!-- nav -->
     <?php include "../includes/nav.php"; ?>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <p>Loading...</p>
-    </div>
-
-    <div class="col-span-12 lg:col-span-10">
-        <h1 class="text-2xl text-center py-4 font-bold">AI-KB - Index Provisioning </h1>
+    <div class="col-span-12 lg:col-span-10 bg-gray-400 relative">
 
         <!-- Index Provisioned -->
-        <div>
-            <div class="border mx-20 mb-10 bg-yellow-100">
-                <h2 class="text-xl font-bold text-center">Index Provisioned</h2>
-
-                <div class="flex justify-center mt-5">
-                    <table class="table-auto  w-3/4 border-collapse border border-gray-300">
-                        <thead>
-                            <tr class="bg-gray-200">
-                                <th class="border border-gray-300 px-4 py-2 text-left font-medium">ID</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left font-medium">Name</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left font-medium">Description</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left font-medium">Units</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left font-medium">Indexed Text Bytes</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left font-medium">Indexed Text Document Count</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left font-medium">Status</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left font-medium">Created At</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left font-medium">Updated At</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="hover:bg-gray-100">
-                                <td class="border border-gray-300 px-4 py-2">1</td>
-                                <td class="border border-gray-300 px-4 py-2">Index Main</td>
-                                <td class="border border-gray-300 px-4 py-2">the main index of the chatbot</td>
-                                <td class="border border-gray-300 px-4 py-2">2</td>
-                                <td class="border border-gray-300 px-4 py-2">30MB</td>
-                                <td class="border border-gray-300 px-4 py-2">5000</td>
-                                <td class="border border-gray-300 px-4 py-2">ACTIVE</td>
-                                <td class="border border-gray-300 px-4 py-2">2024-12-24</td>
-                                <td class="border border-gray-300 px-4 py-2">2024-12-31</td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <div class="bg-white overflow-x-auto mx-4 my-3">
+            <div class="ml-4 flex gap-2">
+                <button id="addBtn" class="bg-blue-500 hover:bg-blue-600 py-1 px-4 rounded-full text-white mt-3 mb-1">
+                    <i class="fa-solid fa-pencil"></i> Update Index</button>
+            </div>
+            <div class="mx-6 max-h-[560px] min-h-[560px] overflow-y-auto overflow-x-auto">
+                <div class="flex animate-pulse">
+                    <div class="h-12 w-1/6 rounded-md bg-gray-300"></div>
+                    <div class="h-12 w-1/4 rounded-md bg-gray-300 ml-auto"></div>
+                </div>
+                <table id="dataTable" class="hover:cursor-pointer mt-2">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-300 px-4 py-2 text-left font-medium">ID</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left font-medium">Name</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left font-medium">Description</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left font-medium">Units</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left font-medium">Indexed Text Bytes
+                            </th>
+                            <th class="border border-gray-300 px-4 py-2 text-left font-medium">Indexed Text Document
+                                Count</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left font-medium">Status</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left font-medium">Created At</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left font-medium">Updated At</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr class="animate-pulse h-9">
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                        </tr>
+                        <tr class="animate-pulse h-9">
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                        </tr>
+                        <tr class="animate-pulse h-9">
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="flex animate-pulse mt-2">
+                    <div class="h-12 w-1/6 rounded-md bg-gray-300"></div>
+                    <div class="h-12 w-1/6 rounded-md bg-gray-300 ml-auto"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Update Index -->
-        <div class="border mx-20 mt-10 bg-green-100">
-            <h2 class="text-xl font-bold text-center">Update Index Provisioning</h2>
 
-            <div>
-                <label for="data_source">Index ID:</label>
-                <select name="data_source" id="data_source" class="border rounded border-gray-700 px-14 mb-2 ml-8">
-                    <option value="#">TBA</option>
-                </select>
-            </div>
-            <div>
-                <label for="name">Name:</label>
-                <input type="text" name="name" id="name" class="border rounded border-gray-700 mb-2 ml-10" placeholder="Name">
-            </div>
-            <div>
-                <label for="description">Description:</label>
-                <input type="text" name="description" id="description" class="border rounded border-gray-700 mb-2"
-                    placeholder="Description">
-            </div>
-            <div>
-                <label for="unit">Units:</label>
-                <input type="text" name="unit" id="unit" class="border rounded border-gray-700 mb-2 ml-11"
-                    placeholder="Number of Units">
-            </div>
-            <button class="bg-green-600 px-4 py-1 rounded-full text-white ml-32"><i
-                    class="fa-solid fa-floppy-disk mr-1"></i>Update Index</button>
-        </div>
     </div>
-    </div>
-    <!-- Tailwind css -->
+    </div><!-- End of Desktop View-->
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script>
 
-    <!-- Custom Toggle Script -->
-    <script src="../scripts/toggle.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/2.2.1/js/dataTables.js"></script>
+    <script src="../scripts/data_table.js"></script>
 
-    <!-- Custom Navigation Script -->
+    <!-- Custom Scripts -->
     <script src="../scripts/navigation.js"> </script>
+    <script src="../scripts/index_provisioning.js"></script>
 </body>
 
 </html>

@@ -38,20 +38,6 @@ try {
         return $_SESSION['conversationId'];
     }
 
-    // this function is for learning purposes, this should be static [will be deleted after the creation of QB App]
-    function generateApplicationId()
-    {
-        // The first character should be alphanumeric (a-z, A-Z, 0-9)
-        $firstChar = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 1);
-
-        // The remaining 35 characters can be alphanumeric or hyphen
-        $remainingChars = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'), 0, 35);
-
-        // Concatenate the first character with the remaining 35 characters
-        $applicationId = $firstChar . $remainingChars;
-
-        return $applicationId;
-    }
 
     // Create a new client using credentials from .env file
     $client = new QBusinessClient([
@@ -64,11 +50,11 @@ try {
     ]);
 
     $result = $client->chatSync([
-        'applicationId' => generateApplicationId(), // REQUIRED [for now, I created a dynamic ID for learning purposes]
-        'chatMode' => 'RETRIEVAL_MODE', // Chat mode for custom knowledge
+        'applicationId' => 'd0021987-01c5-4ff2-9be4-ff9c1e482603',
+        'chatMode' => 'CREATOR_MODE', // Chat mode for custom knowledge [RETRIEVAL_MODE]
         'conversationId' => generateConversationId(), // Session Management
-        'userId' => '<string>', // The ID of the subscribed user (Lite or Pro)
-        'userMessage' => '<string>', // End user message in a conversation
+        // 'userId' => 'd0021987-01c5-4ff2-9be4-ff9c1e482603', // The ID of the subscribed user (Lite or Pro)
+        'userMessage' => 'What is the name of the 5th planet from the Sun in our Solar System?', // End user message in a conversation
     ]);
 
     // Extract only the required fields

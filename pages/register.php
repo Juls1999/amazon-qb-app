@@ -5,8 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - AI-KB</title>
+    <!-- Tailwindcss -->
     <link rel="stylesheet" href="../styles/style.css">
-    <link rel="stylesheet" href="../styles/styles.css">
+    <!-- Custom css -->
+    <link rel="stylesheet" href="../styles/loading_screen.css">
+    
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-default@4/default.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -54,7 +57,7 @@
     <script src="../scripts/toggle.js"></script>
 
     <!-- Custom register script -->
-     <script src="../scripts/register.js"></script>
+    <script src="../scripts/register.js"></script>
 
 </body>
 
