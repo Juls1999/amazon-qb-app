@@ -53,7 +53,7 @@ if (!isset($_SESSION['user'])) {
 
             </div>
 
-            <button id="destroySessionButton" class="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded-md">End
+            <button id="destroySessionBtn" class="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded-md">End
                 Chat</button>
             <div class="flex items-center border-t border-gray-300 bg-gray-50 p-2">
                 <input type="text" id="userPrompt" placeholder="Type your message..."

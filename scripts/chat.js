@@ -126,7 +126,7 @@ $(document).ready(function () {
   });
 
   // destroy session
-  $("#destroySessionButton").click(function () {
+  $("#destroySessionBtn").click(function () {
     $.ajax({
       type: "POST",
       url: "../session/destroy_session.php",
@@ -134,7 +134,7 @@ $(document).ready(function () {
         if (response) {
           toastr.success("New Chat created!");
           $("#chatBox").empty();
-          $("#userPrompt").val("Hello, Crystal Dash Agent!"); // Reset to default prompt
+          $("#userPrompt").val("Hello, Crystal Dash Agentss!"); // Reset to default prompt
 
           // Trigger send button click to send default prompt
           $("#sendButton").click();

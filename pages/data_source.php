@@ -50,7 +50,8 @@ if (!isset($_SESSION['user'])) {
                 <button id="addBtn"
                     class="bg-green-500 hover:bg-green-600 disabled:opacity-50 cursor-not-allowed py-2 px-6 md:py-1 md:px-4 rounded-full text-white mt-3 mb-1 tooltip-btn"
                     data-tooltip="Add a new data source" disabled>
-                    <div class="flex gap-1"><i class="fa-solid fa-plus md:mt-1"></i> <span class="hidden md:block"> Add Data
+                    <div class="flex gap-1"><i class="fa-solid fa-plus md:mt-1 text-lg"></i> <span
+                            class="hidden md:block"> Add Data
                             Source</span></div>
                 </button>
 
@@ -58,7 +59,8 @@ if (!isset($_SESSION['user'])) {
                 <button id="editBtn"
                     class="bg-yellow-500 hover:bg-yellow-600 py-2 px-6 md:py-1 md:px-4 rounded-full text-white disabled:opacity-50 mt-3 mb-1 cursor-not-allowed tooltip-btn"
                     data-tooltip="Edit the selected data source" disabled>
-                    <div class="flex gap-1"><i class="fa-solid fa-pencil md:mt-1"></i> <span class="hidden md:block"> Edit Data
+                    <div class="flex gap-1"><i class="fa-solid fa-pencil md:mt-1 text-lg"></i> <span
+                            class="hidden md:block"> Edit Data
                             Source</span></div>
                 </button>
 
@@ -66,7 +68,8 @@ if (!isset($_SESSION['user'])) {
                 <button id="deleteBtn"
                     class="bg-red-500 hover:bg-red-600 py-2 px-6 md:py-1 md:px-4 rounded-full text-white disabled:opacity-50 mt-3 mb-1 cursor-not-allowed tooltip-btn"
                     data-tooltip="Delete the selected data source" disabled>
-                    <div class="flex gap-1"><i class="fa-solid fa-trash md:mt-1"></i> <span class="hidden md:block"> Delete Data
+                    <div class="flex gap-1"><i class="fa-solid fa-trash md:mt-1 text-lg"></i> <span
+                            class="hidden md:block"> Delete Data
                             Source</span></div>
                 </button>
             </div>
@@ -87,6 +90,7 @@ if (!isset($_SESSION['user'])) {
                             <th class="border border-gray-300 px-4 py-2 text-left font-medium">Name</th>
                             <th class="border border-gray-300 px-4 py-2 text-left font-medium">Status</th>
                             <th class="border border-gray-300 px-4 py-2 text-left font-medium">Created At</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left font-medium">Updated At</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -96,20 +100,10 @@ if (!isset($_SESSION['user'])) {
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
-                        </tr>
-                        <tr class="animate-pulse h-9">
-                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
-                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
-                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                         </tr>
                         <tr class="animate-pulse h-9">
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
-                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
-                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
-                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
-                        </tr>
-                        <tr class="animate-pulse h-9">
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
@@ -120,8 +114,24 @@ if (!isset($_SESSION['user'])) {
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                         </tr>
                         <tr class="animate-pulse h-9">
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                        </tr>
+                        <tr class="animate-pulse h-9">
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
+                        </tr>
+                        <tr class="animate-pulse h-9">
+                            <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
                             <td class="border border-gray-300 px-4 py-2 bg-gray-300"></td>
@@ -205,8 +215,9 @@ if (!isset($_SESSION['user'])) {
                     <h2 class="text-lg font-medium"><i class="fa-solid fa-trash"></i> Confirm Deletion</h2>
                 </div>
                 <div class="px-6 py-4">
-                    <p class="text-sm font-medium text-gray-700">Are you sure you want to delete this data source? This
-                        action cannot be undone.</p>
+                    <p class="font-medium text-gray-700">Are you sure you want to delete this data source? This
+                        action cannot be undone. Type <span class="text-red-500">DELETE</span> to confirm</p>
+                    <div class="flex justify-center mt-1" ><input class="border border-black" type="text" id="confirmDelete"></div>
                 </div>
                 <div class="flex justify-center bg-red-500 py-4">
                     <button id="closeDeleteModal" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>

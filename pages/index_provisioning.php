@@ -45,7 +45,7 @@ if (!isset($_SESSION['user'])) {
     <div class="col-span-12 lg:col-span-10 bg-gray-400 relative">
 
         <!-- Index Provisioned -->
-        <div class="bg-white overflow-x-auto mx-4 my-3">
+        <div class="bg-white overflow-x-auto mx-4 my-3 rounded-md">
             <div class="ml-4 flex gap-2">
                 <button id="addBtn" class="bg-blue-500 hover:bg-blue-600 py-1 px-4 rounded-full text-white mt-3 mb-1">
                     <i class="fa-solid fa-pencil"></i> Update Index</button>

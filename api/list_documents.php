@@ -1,14 +1,10 @@
 <?php
-session_start(); // Start the session to track the conversation ID
-
 require '../vendor/autoload.php';
 
 use Aws\Sts\StsClient;
 use Aws\QBusiness\QBusinessClient;
 use Aws\Exception\AwsException;
 use Dotenv\Dotenv;
-// use Aws\SsoOidc\SsoOidcClient;
-
 
 // Load your IAM user credentials from .env
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
@@ -74,49 +70,35 @@ if (!$tempCredentials) {
     saveCredentialsToCache($cacheFile, $tempCredentials);
 }
 
+// Create QBusiness client using temp credentials
+$client = new QBusinessClient([
+    'version' => 'latest',
+    'region' => 'us-west-2',
+    'credentials' => [
+        'key' => $tempCredentials['AccessKeyId'],
+        'secret' => $tempCredentials['SecretAccessKey'],
+        'token' => $tempCredentials['SessionToken'],
+    ],
+]);
+
+echo '<pre>';
+foreach ($tempCredentials as $key => $value) {
+    echo $key . ': ' . $value . "\n";
+}
+echo '</pre>';
 
 try {
-
-    // Create QBusiness client using temp credentials
-    $client = new QBusinessClient([
-        'version' => 'latest',
-        'region' => 'us-west-2',
-        'credentials' => [
-            'key' => $tempCredentials['AccessKeyId'],
-            'secret' => $tempCredentials['SecretAccessKey'],
-            'token' => $tempCredentials['SessionToken'],
-        ],
+    $result = $client->listDocuments([
+        'applicationId' => 'd0021987-01c5-4ff2-9be4-ff9c1e482603', // REQUIRED
+        'dataSourceIds' => ['e4eb6975-ff25-4527-82a8-44167f8ef4d6'],
+        'indexId' => 'b9d8bc3a-9f49-41e1-a418-1513248628d0', // REQUIRED
+        'maxResults' => "100",
     ]);
 
-    // Create QBusiness client using temp credentials
-    // $client2 = new SsoOidcClient([
-    //     'version' => 'latest',
-    //     'region' => 'us-west-2',
-    //     'credentials' => [
-    //         'key' => $tempCredentials['AccessKeyId'],
-    //         'secret' => $tempCredentials['SecretAccessKey'],
-    //         'token' => $tempCredentials['SessionToken'],
-    //     ],
-    // ]);
-
-    // $result2 = $client2->createTokenWithIAM([
-    //     'assertion' => '<string>',
-    //     'clientId' => 'arn:aws:sso::354870356684:application/ssoins-79071025c91fd908/apl-002135f5a67d1024', // REQUIRED
-    //     'grantType' => 'urn:ietf:params:oauth:grant-type:jwt-bearer', // REQUIRED
-    // ]);
-
-    $result = $client->chatSync([
-        'applicationId' => 'd0021987-01c5-4ff2-9be4-ff9c1e482603',
-        'chatMode' => 'CREATOR_MODE',
-        'userMessage' => 'What is the fifth planet from the Sun in our Solar System?',
-    ]);
-
-
-
-    // Output the filtered result
-    echo "Filtered Result: " . print_r($filteredResult, true);
+    echo "<pre>";
+    print_r($result);
+    echo "</pre>";
 
 } catch (AwsException $e) {
-    // Output error message if it fails
-    echo "Error syncing chat: " . $e->getMessage();
+    echo $e->getAwsErrorMessage();
 }

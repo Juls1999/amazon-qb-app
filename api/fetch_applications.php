@@ -1,14 +1,10 @@
 <?php
-session_start(); // Start the session to track the conversation ID
-
 require '../vendor/autoload.php';
 
 use Aws\Sts\StsClient;
 use Aws\QBusiness\QBusinessClient;
 use Aws\Exception\AwsException;
 use Dotenv\Dotenv;
-// use Aws\SsoOidc\SsoOidcClient;
-
 
 // Load your IAM user credentials from .env
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
@@ -75,8 +71,8 @@ if (!$tempCredentials) {
 }
 
 
-try {
 
+try {
     // Create QBusiness client using temp credentials
     $client = new QBusinessClient([
         'version' => 'latest',
@@ -88,35 +84,28 @@ try {
         ],
     ]);
 
-    // Create QBusiness client using temp credentials
-    // $client2 = new SsoOidcClient([
-    //     'version' => 'latest',
-    //     'region' => 'us-west-2',
-    //     'credentials' => [
-    //         'key' => $tempCredentials['AccessKeyId'],
-    //         'secret' => $tempCredentials['SecretAccessKey'],
-    //         'token' => $tempCredentials['SessionToken'],
-    //     ],
-    // ]);
-
-    // $result2 = $client2->createTokenWithIAM([
-    //     'assertion' => '<string>',
-    //     'clientId' => 'arn:aws:sso::354870356684:application/ssoins-79071025c91fd908/apl-002135f5a67d1024', // REQUIRED
-    //     'grantType' => 'urn:ietf:params:oauth:grant-type:jwt-bearer', // REQUIRED
-    // ]);
-
-    $result = $client->chatSync([
-        'applicationId' => 'd0021987-01c5-4ff2-9be4-ff9c1e482603',
-        'chatMode' => 'CREATOR_MODE',
-        'userMessage' => 'What is the fifth planet from the Sun in our Solar System?',
+    // Fetch list of applications with a maximum of 1 result
+    $result = $client->listApplications([
+        'maxResults' => 10, // Fetch up to 10 results instead of 1
     ]);
 
+    $applications = [];
 
+    if (isset($result['applications']) && count($result['applications']) > 0) {
+        foreach ($result['applications'] as $application) {
+            $applications[] = [
+                'id' => $application['applicationId'],
+                'name' => $application['displayName'],
+                'status' => $application['status'],
+                'created_at' => $application['createdAt']->format('Y-m-d H:i:s'),
+                'updated_at' => $application['updatedAt']->format('Y-m-d H:i:s')
+            ];
+        }
+    }
 
-    // Output the filtered result
-    echo "Filtered Result: " . print_r($filteredResult, true);
+    echo json_encode(['success' => true, 'data' => $applications]);
 
 } catch (AwsException $e) {
-    // Output error message if it fails
-    echo "Error syncing chat: " . $e->getMessage();
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
+?>

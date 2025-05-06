@@ -7,8 +7,6 @@ use Aws\Sts\StsClient;
 use Aws\QBusiness\QBusinessClient;
 use Aws\Exception\AwsException;
 use Dotenv\Dotenv;
-// use Aws\SsoOidc\SsoOidcClient;
-
 
 // Load your IAM user credentials from .env
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
@@ -54,14 +52,9 @@ if (!$tempCredentials) {
         ],
     ]);
 
-
-    $timestamp = time();
-    $randomString = bin2hex(random_bytes(4)); // 8 characters long random string
-    $sessionName = 'qbusiness-session-' . $timestamp . '-' . $randomString;
-
     $result = $stsClient->assumeRole([
         'RoleArn' => 'arn:aws:iam::354870356684:role/QBusinessRole',
-        'RoleSessionName' => $sessionName,
+        'RoleSessionName' => 'qbusiness-session',
     ]);
 
     $tempCredentials = [
@@ -74,49 +67,45 @@ if (!$tempCredentials) {
     saveCredentialsToCache($cacheFile, $tempCredentials);
 }
 
+// echo '<pre>';
+// foreach ($tempCredentials as $key => $value) {
+//     echo $key . ': ' . $value . "\n";
+// }
+// echo '</pre>';
+
+
+// Function to get the valid conversation ID if available
+function getValidConversationId()
+{
+    // Check if a valid conversationId exists in session
+    if (!empty($_SESSION['conversationId']) && strlen($_SESSION['conversationId']) >= 36) {
+        return $_SESSION['conversationId']; // Return if it's a valid string
+    }
+
+    return null; // Return null if not valid
+}
+// Create QBusiness client using temp credentials
+$client = new QBusinessClient([
+    'version' => 'latest',
+    'region' => 'us-west-2',
+    'credentials' => [
+        'key' => $tempCredentials['AccessKeyId'],
+        'secret' => $tempCredentials['SecretAccessKey'],
+        'token' => $tempCredentials['SessionToken'],
+    ],
+]);
 
 try {
-
-    // Create QBusiness client using temp credentials
-    $client = new QBusinessClient([
-        'version' => 'latest',
-        'region' => 'us-west-2',
-        'credentials' => [
-            'key' => $tempCredentials['AccessKeyId'],
-            'secret' => $tempCredentials['SecretAccessKey'],
-            'token' => $tempCredentials['SessionToken'],
-        ],
-    ]);
-
-    // Create QBusiness client using temp credentials
-    // $client2 = new SsoOidcClient([
-    //     'version' => 'latest',
-    //     'region' => 'us-west-2',
-    //     'credentials' => [
-    //         'key' => $tempCredentials['AccessKeyId'],
-    //         'secret' => $tempCredentials['SecretAccessKey'],
-    //         'token' => $tempCredentials['SessionToken'],
-    //     ],
-    // ]);
-
-    // $result2 = $client2->createTokenWithIAM([
-    //     'assertion' => '<string>',
-    //     'clientId' => 'arn:aws:sso::354870356684:application/ssoins-79071025c91fd908/apl-002135f5a67d1024', // REQUIRED
-    //     'grantType' => 'urn:ietf:params:oauth:grant-type:jwt-bearer', // REQUIRED
-    // ]);
-
     $result = $client->chatSync([
-        'applicationId' => 'd0021987-01c5-4ff2-9be4-ff9c1e482603',
+        'applicationId' => 'd0021987-01c5-4ff2-9be4-ff9c1e482603', // REQUIRED
         'chatMode' => 'CREATOR_MODE',
-        'userMessage' => 'What is the fifth planet from the Sun in our Solar System?',
+        // 'conversationId' => '<string>',
+        // 'parentMessageId' => '<string>',
+        'userMessage' => 'What is the planet 5th from the Sun?',
     ]);
 
-
-
-    // Output the filtered result
-    echo "Filtered Result: " . print_r($filteredResult, true);
+    echo $result;
 
 } catch (AwsException $e) {
-    // Output error message if it fails
-    echo "Error syncing chat: " . $e->getMessage();
+    echo $e->getMessage();
 }

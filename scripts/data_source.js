@@ -43,77 +43,78 @@ $(document).ready(function () {
   });
 
   let selectedRow = null;
+  // Fetch data from PHP script
+  function fetchData() {
+    $.ajax({
+      url: "../api/fetch_applications.php", // Update with your PHP file path
+      type: "GET",
+      dataType: "json",
+      success: function (response) {
+        if (response.success) {
+          populateTable(response.data);
+        } else {
+          toastr.error("Failed to fetch data.", "Error");
+        }
+      },
+      error: function () {
+        toastr.error("Error connecting to the server.", "Error");
+      },
+    });
+  }
 
-  // Simulating an API request with a delay (e.g., 2 seconds)
-  setTimeout(function () {
-    // Example data fetched
-    const data = [
-      {
-        id: 1,
-        name: "Crystal Dash Support",
-        status: "CREATING",
-        createdAt: "2024-12-24",
-      },
-      {
-        id: 2,
-        name: "Fanvil Support",
-        status: "ACTIVE",
-        createdAt: "2024-12-24",
-      },
-      {
-        id: 3,
-        name: "Fanvil Support",
-        status: "ACTIVE",
-        createdAt: "2024-12-23",
-      },
-    ];
-
-    // Clear skeleton loader and populate table with data
+  // Populate table with fetched data
+  function populateTable(data) {
     let tableBody = $("#tableBody");
-    tableBody.empty(); // Clear skeleton rows
+    tableBody.empty();
 
-    // Populate table with data
     data.forEach((item) => {
-      tableBody.append(`
+      let row = `
         <tr class="hover:bg-gray-300">
-            <td class="border border-gray-300 px-4 py-2">${item.id}</td>
-            <td class="border border-gray-300 px-4 py-2">${item.name}</td>
-            <td class="border border-gray-300 px-4 py-2"><span class="${
-              item.status === "ACTIVE" ? "bg-green-400" : "bg-blue-400"
-            } px-4 py-1 rounded-full bg-opacity-60 text-white">${item.status}</span>
-            </td>
-            <td class="border border-gray-300 px-4 py-2">${item.createdAt}</td>
+          <td class="border border-gray-300 px-4 py-2">${item.id}</td>
+          <td class="border border-gray-300 px-4 py-2">${item.name}</td>
+          <td class="border border-gray-300 px-4 py-2"><span class="${
+            item.status === "ACTIVE" ? "bg-green-400" : "bg-blue-400"
+          } px-4 py-1 rounded-full bg-opacity-60 text-white">${
+        item.status
+      }</span></td>
+          <td class="border border-gray-300 px-4 py-2">${item.created_at}</td>
+          <td class="border border-gray-300 px-4 py-2">${item.updated_at}</td>
         </tr>
-      `);
-      $("#addBtn").prop("disabled", false);
-      $("#addBtn").removeClass("cursor-not-allowed");
-      $("#dataTable").removeClass("hover:cursor-not-allowed");
-      $("#dataTable").addClass("hover:cursor-pointer");
-      // Remove the skeleton loader and the width after data is loaded
-      $("#dataTable").removeClass("w-full");
-      // Remove the skeleton loader and the margin after data is loaded
-      $("#dataTable").removeClass("mt-2");
-      // Remove the skeleton loader div after data is loaded
-      $(".flex.animate-pulse").remove(); // Removes the skeleton loader
+      `;
+      tableBody.append(row);
     });
 
-    // Initialize DataTable after the data is loaded
+    $("#addBtn").prop("disabled", false);
+    $("#addBtn").removeClass("cursor-not-allowed");
+    $("#dataTable").removeClass("hover:cursor-not-allowed");
+    $("#dataTable").addClass("hover:cursor-pointer");
+    // Remove the skeleton loader and the width after data is loaded
+    $("#dataTable").removeClass("w-full");
+    // Remove the skeleton loader and the margin after data is loaded
+    $("#dataTable").removeClass("mt-2");
+    // Remove the skeleton loader div after data is loaded
+    $(".flex.animate-pulse").remove(); // Removes the skeleton loader
+
+    // Initialize DataTable
     $("#dataTable").DataTable();
+  }
 
-    // Row click handler using event delegation
-    $("#dataTable tbody").on("click", "tr", function () {
-      // Highlight the selected row
-      $("#dataTable tbody tr").removeClass("selected");
-      $(this).addClass("selected");
-      selectedRow = $(this);
+  // Fetch data on page load
+  fetchData();
 
-      // Enable the Edit and Delete buttons
-      $("#editBtn").prop("disabled", false);
-      $("#editBtn").removeClass("cursor-not-allowed");
-      $("#deleteBtn").prop("disabled", false);
-      $("#deleteBtn").removeClass("cursor-not-allowed");
-    });
-  }, 2000); // Simulating 2 seconds API delay
+  // Row click handler using event delegation
+  $("#dataTable tbody").on("click", "tr", function () {
+    // Highlight the selected row
+    $("#dataTable tbody tr").removeClass("selected");
+    $(this).addClass("selected");
+    selectedRow = $(this);
+
+    // Enable the Edit and Delete buttons
+    $("#editBtn").prop("disabled", false);
+    $("#editBtn").removeClass("cursor-not-allowed");
+    $("#deleteBtn").prop("disabled", false);
+    $("#deleteBtn").removeClass("cursor-not-allowed");
+  });
 
   // Row double-click handler for deselecting
   $("#dataTable tbody").on("dblclick", "tr", function () {
@@ -144,6 +145,7 @@ $(document).ready(function () {
   // Close the delete modal
   $("#closeDeleteModal").on("click", function (e) {
     e.preventDefault();
+    $("#confirmDelete").val("");
     $("#deleteModal").removeClass("flex");
     $("#deleteModal").addClass("hidden");
     $("#editBtn").prop("disabled", true);
@@ -156,53 +158,40 @@ $(document).ready(function () {
 
   // Confirm delete action
   $("#confirmDeleteBtn").on("click", function (e) {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You want to delete this data source",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Delete it!",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your data source was deleted successfully.",
-          icon: "success",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-        });
-        e.preventDefault();
+    let confirmDelete = $("#confirmDelete").val();
 
-        if (selectedRow) {
-          // Remove the selected row from the table
-          selectedRow.remove();
+    if (confirmDelete === "DELETE") {
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your data source was deleted successfully.",
+        icon: "success",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      });
+      e.preventDefault();
 
-          // Close the modal after deletion
-          $("#deleteModal").removeClass("flex");
-          $("#deleteModal").addClass("hidden");
+      if (selectedRow) {
+        // Remove the selected row from the table
+        selectedRow.remove();
 
-          // Deselect the row and disable the buttons
-          selectedRow = null;
-          $("#editBtn").prop("disabled", true);
-          $("#editBtn").addClass("cursor-not-allowed");
-          $("#deleteBtn").prop("disabled", true);
-          $("#deleteBtn").addClass("cursor-not-allowed");
-        }
-      } else {
-        swal.fire({
-          title: "Cancelled",
-          text: "Your data source was not deleted successfully.",
-          icon: "error",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-        });
+        // Close the modal after deletion
+        $("#deleteModal").removeClass("flex");
         $("#deleteModal").addClass("hidden");
+        $("#confirmDelete").val("");
+
+        // Deselect the row and disable the buttons
+        selectedRow = null;
+        $("#editBtn").prop("disabled", true);
+        $("#editBtn").addClass("cursor-not-allowed");
+        $("#deleteBtn").prop("disabled", true);
+        $("#deleteBtn").addClass("cursor-not-allowed");
       }
-    });
+    } else {
+      toastr.warning(
+        "Please type DELETE in the text field to confirm deletion.",
+        "Action warning!"
+      );
+    }
   });
 
   // *************** ADD FUNCTIONALITY ********************************

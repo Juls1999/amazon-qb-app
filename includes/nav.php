@@ -9,7 +9,7 @@ $navItems = [
 ?>
 
 <!-- Mobile Navigation -->
-<nav class="bg-gray-700 h-24 lg:hidden">
+<nav class="bg-gray-700 h-24 sticky top-0 z-10 lg:hidden">
     <h1 class="text-center text-white text-2xl font-semibold">AI-KB</h1>
     <ul class="flex justify-around text-white font-semibold">
         <?php foreach ($navItems as $item): ?>
@@ -34,8 +34,8 @@ $navItems = [
             <hr class="border-gray-500 my-2">
             <ul class=" text-white">
                 <?php foreach ($navItems as $item): ?>
-                    <li class="py-2 mt-1 hover:bg-neutral-500">
-                        <a href="<?= $item['href'] ?>" class="flex items-center desktop-nav font-anton">
+                    <li class="mt-1 hover:bg-neutral-500">
+                        <a href="<?= $item['href'] ?>" class="flex items-center font-anton py-2 ">
                             <i class="fa-solid <?= $item['icon'] ?> mr-2 ml-8"></i> <?= $item['name'] ?>
                         </a>
                     </li>
