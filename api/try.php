@@ -1,50 +1,38 @@
 <?php
-session_start(); // Start the session to track the conversation ID
-
 require '../vendor/autoload.php';
+session_start(); // Start the session to track conversation + credentials
 
 use Aws\Sts\StsClient;
 use Aws\QBusiness\QBusinessClient;
 use Aws\Exception\AwsException;
+use Aws\SSOOIDC\SSOOIDCClient;
+use Aws\SSO\SSOClient;
 use Dotenv\Dotenv;
-// use Aws\SsoOidc\SsoOidcClient;
-
 
 // Load your IAM user credentials from .env
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
-// Path to cache file
-$cacheFile = __DIR__ . '/../cache/temp_credentials.json';
-
-// Function to load cached credentials
-function loadCachedCredentials($path)
+// Helper: Load cached credentials from session
+function getSessionCredentials()
 {
-    if (!file_exists($path))
-        return null;
-
-    $data = json_decode(file_get_contents($path), true);
-    if (!$data || !isset($data['Expiration']))
-        return null;
-
-    $expiration = strtotime($data['Expiration']);
-    if ($expiration <= time() + 60)
-        return null; // Less than 1 min left = expired
-
-    return $data;
+    if (
+        isset($_SESSION['sts_credentials']) &&
+        isset($_SESSION['sts_credentials']['Expiration']) &&
+        strtotime($_SESSION['sts_credentials']['Expiration']) > time() + 60 // valid for at least 1 more minute
+    ) {
+        // Print session data for debugging
+        // echo '<pre>';
+        // print_r($_SESSION['sts_credentials']); // This will print all session data
+        // echo '</pre>';
+        return $_SESSION['sts_credentials'];
+    }
+    return null;
 }
 
-// Function to save credentials to cache
-function saveCredentialsToCache($path, $credentials)
+// Helper: Get fresh credentials via STS assumeRole
+function getFreshStsCredentials()
 {
-    file_put_contents($path, json_encode($credentials, JSON_PRETTY_PRINT));
-}
-
-// Try to load cached credentials
-$tempCredentials = loadCachedCredentials($cacheFile);
-
-// If not cached or expired, assume role again
-if (!$tempCredentials) {
     $stsClient = new StsClient([
         'region' => 'us-west-2',
         'version' => 'latest',
@@ -54,31 +42,109 @@ if (!$tempCredentials) {
         ],
     ]);
 
-
     $timestamp = time();
-    $randomString = bin2hex(random_bytes(4)); // 8 characters long random string
+    $randomString = bin2hex(random_bytes(4));
     $sessionName = 'qbusiness-session-' . $timestamp . '-' . $randomString;
 
     $result = $stsClient->assumeRole([
-        'RoleArn' => 'arn:aws:iam::354870356684:role/QBusinessRole',
+        'RoleArn' => 'arn:aws:iam::354870356684:role/QBusinessRole', // <-- Make sure this is the user role
         'RoleSessionName' => $sessionName,
+        'DurationSeconds' => 10800,
     ]);
 
     $tempCredentials = [
         'AccessKeyId' => $result['Credentials']['AccessKeyId'],
         'SecretAccessKey' => $result['Credentials']['SecretAccessKey'],
         'SessionToken' => $result['Credentials']['SessionToken'],
-        'Expiration' => $result['Credentials']['Expiration'], // ISO format
+        'Expiration' => $result['Credentials']['Expiration'], // ISO8601 string
     ];
 
-    saveCredentialsToCache($cacheFile, $tempCredentials);
+    // Save to session
+    $_SESSION['sts_credentials'] = $tempCredentials;
+    // Print session data for debugging
+    // echo '<pre>';
+    // print_r($_SESSION['sts_credentials']); // This will print all session data
+    // echo '</pre>';
+    return $tempCredentials;
 }
 
+// Load valid credentials from session or get fresh
+$tempCredentials = getSessionCredentials() ?? getFreshStsCredentials();
+
+// Helper: Get valid conversation ID
+function getValidConversationId()
+{
+    return (!empty($_SESSION['conversationId']) && strlen($_SESSION['conversationId']) >= 36)
+        ? $_SESSION['conversationId']
+        : null;
+}
+function cacheToJsonFile($filePath, $data)
+{
+    $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+    file_put_contents($filePath, $jsonData);
+}
+
+function getFromJsonCacheFile($filePath)
+{
+    if (file_exists($filePath)) {
+        $jsonData = file_get_contents($filePath);
+        return json_decode($jsonData, true);
+    }
+    return null;
+}
 
 try {
+    $cacheFilePath = __DIR__ . '/../cache/temp_creds.json';
+    $cachedSsoOidcResult = getFromJsonCacheFile($cacheFilePath);
+    $currentTime = time();
 
-    // Create QBusiness client using temp credentials
-    $client = new QBusinessClient([
+    $shouldRegister = false;
+
+    if (
+        !$cachedSsoOidcResult ||
+        !isset($cachedSsoOidcResult['clientId'], $cachedSsoOidcResult['clientSecret'], $cachedSsoOidcResult['clientSecretExpiresAt']) ||
+        $cachedSsoOidcResult['clientSecretExpiresAt'] <= $currentTime
+    ) {
+        $shouldRegister = true;
+    }
+
+    if ($shouldRegister) {
+        // Register new client
+        $ssoOidcClient = new SsoOidcClient([
+            'version' => 'latest',
+            'region' => 'us-west-2',
+            'credentials' => [
+                'key' => $tempCredentials['AccessKeyId'],
+                'secret' => $tempCredentials['SecretAccessKey'],
+                'token' => $tempCredentials['SessionToken'],
+            ],
+        ]);
+
+        $ssoOidcResult = $ssoOidcClient->registerClient([
+            'clientName' => 'Hello',
+            'clientType' => 'public',
+        ]);
+
+        // Cache the new client info
+        cacheToJsonFile($cacheFilePath, [
+            'clientId' => $ssoOidcResult['clientId'],
+            'clientSecret' => $ssoOidcResult['clientSecret'],
+            'clientSecretExpiresAt' => $ssoOidcResult['clientSecretExpiresAt'],
+        ]);
+
+        $clientId = $ssoOidcResult['clientId'];
+        $clientSecret = $ssoOidcResult['clientSecret'];
+        $clientSecretExpiresAt = $ssoOidcResult['clientSecretExpiresAt'];
+
+    } else {
+        // Use cached values
+        $clientId = $cachedSsoOidcResult['clientId'];
+        $clientSecret = $cachedSsoOidcResult['clientSecret'];
+        $clientSecretExpiresAt = $cachedSsoOidcResult['clientSecretExpiresAt'];
+    }
+
+    // Use SSO OIDC client to start device authorization
+    $ssoOidcClient = new SsoOidcClient([
         'version' => 'latest',
         'region' => 'us-west-2',
         'credentials' => [
@@ -88,35 +154,71 @@ try {
         ],
     ]);
 
-    // Create QBusiness client using temp credentials
-    // $client2 = new SsoOidcClient([
+    $startResponse = $ssoOidcClient->startDeviceAuthorization([
+        'clientId' => $clientId,
+        'clientSecret' => $clientSecret,
+        'startUrl' => 'https://my-sso-portal.awsapps.com/start',
+    ]);
+
+    // Use Puppeteer to automate login
+    $escapedUrl = escapeshellarg($startResponse['verificationUriComplete']);
+    $puppeteerOutput = shell_exec("node ../api/automated_login.js $escapedUrl 2>&1");
+    echo "<pre>$puppeteerOutput</pre>"; // See output directly in the browser
+
+    if (strpos($puppeteerOutput, 'Login automation failed') !== false) {
+        echo "Puppeteer login failed!";
+    } else {
+        // Direct token creation attempt without the while loop
+        try {
+            $tokenResponse = $ssoOidcClient->createToken([
+                'clientId' => $clientId,
+                'clientSecret' => $clientSecret,
+                'deviceCode' => $startResponse['deviceCode'],
+                'grantType' => 'urn:ietf:params:oauth:grant-type:device_code',
+            ]);
+
+            // Success!
+            $accessToken = $tokenResponse['accessToken'];
+            echo "ACCESSTOKEN: $accessToken";
+        } catch (AwsException $e) {
+            echo "Error while creating token: " . $e->getMessage();
+        }
+    }
+
+    $ssoClient = new SsoClient([
+        'version' => 'latest',
+        'region' => 'us-west-2',
+        'credentials' => [
+            'key' => $tempCredentials['AccessKeyId'],
+            'secret' => $tempCredentials['SecretAccessKey'],
+            'token' => $tempCredentials['SessionToken'],
+        ],
+    ]);
+
+    // Create User temp creds
+    // $ssoResult = $ssoClient->getRoleCredentials([
+    //     'accessToken' => '<string>', // REQUIRED from createToken
+    //     'accountId' => '354870356684', // REQUIRED
+    //     'roleName' => 'QBusinessRole', // REQUIRED 
+    // ]);
+
+    // Create QBusiness client using session credentials
+    // $qbClient = new QBusinessClient([
     //     'version' => 'latest',
     //     'region' => 'us-west-2',
     //     'credentials' => [
-    //         'key' => $tempCredentials['AccessKeyId'],
-    //         'secret' => $tempCredentials['SecretAccessKey'],
-    //         'token' => $tempCredentials['SessionToken'],
+    //         'key' => $ssoResult['AccessKeyId'],
+    //         'secret' => $ssoResult['SecretAccessKey'],
+    //         'token' => $ssoResult['SessionToken'],
     //     ],
     // ]);
 
-    // $result2 = $client2->createTokenWithIAM([
-    //     'assertion' => '<string>',
-    //     'clientId' => 'arn:aws:sso::354870356684:application/ssoins-79071025c91fd908/apl-002135f5a67d1024', // REQUIRED
-    //     'grantType' => 'urn:ietf:params:oauth:grant-type:jwt-bearer', // REQUIRED
+    // $qbResult = $qbClient->chatSync([
+    //     'applicationId' => 'd0021987-01c5-4ff2-9be4-ff9c1e482603',
+    //     'chatMode' => 'CREATOR_MODE', // or 'RETRIEVAL_MODE'
+    //     'userMessage' => 'What is the name of the 5th planet from the Sun in our Solar System?',
     // ]);
 
-    $result = $client->chatSync([
-        'applicationId' => 'd0021987-01c5-4ff2-9be4-ff9c1e482603',
-        'chatMode' => 'CREATOR_MODE',
-        'userMessage' => 'What is the fifth planet from the Sun in our Solar System?',
-    ]);
-
-
-
-    // Output the filtered result
-    echo "Filtered Result: " . print_r($filteredResult, true);
-
 } catch (AwsException $e) {
-    // Output error message if it fails
-    echo "Error syncing chat: " . $e->getMessage();
+    echo "Error: " . $e->getMessage();
 }

@@ -4,5 +4,11 @@
   },
   "scripts": {
     "build:css": "tailwindcss -i styles/input.css -o styles/style.css --watch"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "puppeteer": "^24.8.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   }
 }
