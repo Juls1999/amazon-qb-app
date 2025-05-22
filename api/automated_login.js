@@ -76,7 +76,7 @@ puppeteer.use(StealthPlugin());
     }
 
     // Wait for navigation (you can fine-tune this)
-    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 10000 });
+    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 3000 });
 
     console.log("Login attempt complete.");
   } catch (err) {

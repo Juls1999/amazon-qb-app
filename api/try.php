@@ -21,10 +21,6 @@ function getSessionCredentials()
         isset($_SESSION['sts_credentials']['Expiration']) &&
         strtotime($_SESSION['sts_credentials']['Expiration']) > time() + 60 // valid for at least 1 more minute
     ) {
-        // Print session data for debugging
-        // echo '<pre>';
-        // print_r($_SESSION['sts_credentials']); // This will print all session data
-        // echo '</pre>';
         return $_SESSION['sts_credentials'];
     }
     return null;
@@ -61,10 +57,6 @@ function getFreshStsCredentials()
 
     // Save to session
     $_SESSION['sts_credentials'] = $tempCredentials;
-    // Print session data for debugging
-    // echo '<pre>';
-    // print_r($_SESSION['sts_credentials']); // This will print all session data
-    // echo '</pre>';
     return $tempCredentials;
 }
 
@@ -121,7 +113,7 @@ try {
         ]);
 
         $ssoOidcResult = $ssoOidcClient->registerClient([
-            'clientName' => 'Hello',
+            'clientName' => 'PublicChat',
             'clientType' => 'public',
         ]);
 
@@ -154,6 +146,18 @@ try {
         ],
     ]);
 
+    // $result = $ssoOidcClient->createTokenWithIAM([
+    //     'clientId' => 'arn:aws:sso::354870356684:application/ssoins-79071025c91fd908/apl-002135f5a67d1024',
+    //     'code' => 'yJraWQiOiJrZXktMTU2Njk2ODA4OCIsImFsZyI6IkhTMzg0In0EXAMPLEAUTHCODE',
+    //     'grantType' => 'authorization_code',
+    //     'redirectUri' => 'https://mywebapp.example/redirect',
+    //     'scope' => [
+    //         'openid',
+    //         'aws',
+    //         'sts:identity_context',
+    //     ],
+    // ]);
+
     $startResponse = $ssoOidcClient->startDeviceAuthorization([
         'clientId' => $clientId,
         'clientSecret' => $clientSecret,
@@ -179,7 +183,8 @@ try {
 
             // Success!
             $accessToken = $tokenResponse['accessToken'];
-            echo "ACCESSTOKEN: $accessToken";
+            $refreshToken = $tokenResponse['refreshToken'];
+            echo "ACCESSTOKEN: $accessToken <br> REFRESHTOKEN: $refreshToken";
         } catch (AwsException $e) {
             echo "Error while creating token: " . $e->getMessage();
         }
@@ -201,6 +206,8 @@ try {
     //     'accountId' => '354870356684', // REQUIRED
     //     'roleName' => 'QBusinessRole', // REQUIRED 
     // ]);
+
+    // echo $ssoResult;
 
     // Create QBusiness client using session credentials
     // $qbClient = new QBusinessClient([
